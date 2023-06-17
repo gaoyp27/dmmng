@@ -1,0 +1,104 @@
+package main
+
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/aliyun/alibaba-cloud-sdk-go/services/alidns"
+)
+
+// 阿里云域名管理系统
+// 1.阿里云账户 key 和 secret
+//   1.1定义 key 和 secret
+// const accessKeyID = os.Getenv("ALIYUN_ACCESSKEYID")
+// const accessSecret = os.Getenv("ALIYUN_ACCESSSECRET")
+
+// var domainName = os.Getenv("DOMAINNAME")
+
+//判断元素是否在被检测的类型（切片，数组等）中
+func IsExistItem(value interface{}, array interface{}) bool {
+	switch reflect.TypeOf(array).Kind() {
+	case reflect.Slice:
+		s := reflect.ValueOf(array)
+		for i := 0; i < s.Len(); i++ {
+			if reflect.DeepEqual(value, s.Interface()) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// 2.验证域名归属权
+//    2.1 如果域名在这个 key 下返回对象
+//    2.2 如果域名不再这个 key 下，返回报错信息
+func GetAccessKeyFromDomainName(domainName string) *alidns.Client {
+
+	type domainclint = *alidns.Client
+
+	client1, _ := alidns.NewClientWithAccessKey("cn-hangzhou", "aliyunkey", "aliyunsecret")
+	client2, _ := alidns.NewClientWithAccessKey("cn-hangzhou", "LTAI5tJNHK3DksjTkcHXnCXG", "8aX3WO7cYBF2I46IwA0cgJugC2ofTA")
+	client3, _ := alidns.NewClientWithAccessKey("cn-hangzhou", "LTAI5tJkWLyj58ERpmZWTGbw", "mRH3xGnXzJ64jl1eo9Sm3VxQ579a9v")
+
+	clientslice := [3]domainclint{client1, client2, client3}
+
+	request := alidns.CreateDescribeDomainInfoRequest()
+	request.Scheme = "https"
+	request.AcceptFormat = "json"
+	request.DomainName = domainName
+	request.Lang = "zh_cn"
+
+	domainInDnsPodList := []string{"dui88.com", "tuia.cn", "duiba.com.cn"}
+	ok := IsExistItem(domainName, domainInDnsPodList)
+	if ok {
+		fmt.Println("域名在 DNSPOD 里！")
+		return nil
+	}
+	// 调试
+	// fmt.Println(len(clientslice))
+
+	for i := 0; i < len(clientslice); i++ {
+		_, err := clientslice[i].DescribeDomainInfo(request)
+		if err != nil {
+			fmt.Print(err.Error())
+			return nil
+		}
+		clientrequest := clientslice[i]
+		return clientrequest
+		// fmt.Printf("response is %#v\n", response)
+	}
+	return nil
+}
+
+func ExecManager(domainName string) {
+
+	aliyunClient := GetAccessKeyFromDomainName(domainName)
+	if aliyunClient != nil {
+
+		request := alidns.CreateAddDomainRecordRequest()
+		request.DomainName = domainName
+		request.Scheme = "https"
+		request.Type = "A"
+		request.Value = "120.26.53.4"
+		request.TTL = "600"
+		request.RR = "@"
+
+		response, err := aliyunClient.AddDomainRecord(request)
+		if err != nil {
+			fmt.Print(err.Error())
+		}
+		fmt.Printf("response is %#v\n", response)
+	}
+
+}
+
+func main() {
+	domain := "duiyanglao.com"
+	ExecManager(domain)
+
+}
+
+// 3.增加域名解析
+// 4.查看域名解析
+// 5.改动域名解析
+// 6.删除域名解析

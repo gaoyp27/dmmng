@@ -1,0 +1,64 @@
+package main
+
+import (
+	"fmt"
+
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
+)
+
+const SecretId = "tencentsecretid"
+const SecretKey = "tencentsecretkey"
+
+type certManager struct {
+	domainName   string
+	accessKeyId  string
+	accessSecret string
+	cred         *common.Credential
+	client       *ssl.Client
+	CertId       string
+}
+
+func NewCertManager(domainName string) *certManager {
+	return &certManager{
+		domainName:   domainName,
+		accessKeyId:  SecretId,
+		accessSecret: SecretKey,
+	}
+}
+
+func (c *certManager) getCerd() *ssl.Client {
+	credential := common.NewCredential(
+		c.accessKeyId,
+		c.accessSecret,
+	)
+	c.cred = credential
+	c.CertId = "x4nQ6vMj"
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.Endpoint = "ssl.tencentcloudapi.com"
+	client, _ := ssl.NewClient(c.cred, "", cpf)
+	c.client = client
+	return client
+
+}
+
+func main() {
+	certObj := NewCertManager("tuiaaaj.cn")
+	certObj.getCerd()
+
+	request := ssl.NewDescribeCertificateDetailRequest()
+
+	request.CertificateId = common.StringPtr(certObj.CertId)
+
+	response, err := certObj.client.DescribeCertificateDetail(request)
+	if _, ok := err.(*errors.TencentCloudSDKError); ok {
+		fmt.Printf("An API error has returned: %s", err)
+		return
+	}
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%s", response.ToJsonString())
+}

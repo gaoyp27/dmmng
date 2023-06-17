@@ -1,0 +1,42 @@
+package main
+
+import (
+	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
+)
+
+type getattr struct {
+	client *ssl.Client
+	req    any
+}
+
+func (g getattr) NewDescribeCertificatesRequest() {
+	result := *ssl.Client
+}
+
+func (g getattr) DescribeCertificates() {
+
+}
+
+func (g getattr) NewDescribeCertificateDetailRequest() {}
+
+func (g getattr) DescribeCertificateDetail() {}
+
+func (g getattr) NewDownloadCertificateRequest() {}
+
+func (g getattr) DownloadCertificate() {}
+
+func (g getattr) NewCompleteCertificateRequest() {}
+func (g getattr) CompleteCertificate()           {}
+func (g getattr) NewCreateCertificateRequest()   {}
+func (g getattr) CreateCertificate()             {}
+
+func (g getattr) NewSubmitCertificateInformationRequest() {}
+func (g getattr) SubmitCertificateInformation()           {}
+func (g getattr) NewCommitCertificateInformationRequest() {}
+func (g getattr) CommitCertificateInformation()           {}
+
+func addDnsRecord() {}
+
+func main() {
+
+}

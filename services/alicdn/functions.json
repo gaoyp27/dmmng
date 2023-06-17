@@ -1,0 +1,129 @@
+[{
+    "FunctionName": "oss_auth",
+    "functionArgs": [{
+        "ArgName": "oss_bucket_id",
+        "ArgValue": "duiba.oss-cn-hangzhou.aliyuncs.com"
+    }]
+},
+    {
+        "FunctionName": "brotli",
+        "functionArgs": [{
+            "ArgValue": "on",
+            "ArgName": "enable"
+        }]
+    },
+    {
+        "FunctionName": "set_req_host_header",
+        "functionArgs": [{
+            "ArgValue": "duiba.oss-cn-hangzhou.aliyuncs.com",
+            "ArgName": "domain_name"
+        }]
+    },
+    {
+        "FunctionName": "set_hashkey_args",
+        "functionArgs": [{
+            "ArgValue": "off",
+            "ArgName": "disable"
+        }]
+    },
+    {
+        "FunctionName": "set_resp_header",
+        "functionArgs": [{
+            "ArgValue": "Access-Control-Allow-Origin",
+            "ArgName": "key"
+        },
+            {
+                "ArgValue": "*",
+                "ArgName": "value"
+            }
+        ]
+    },
+    {
+        "FunctionName": "set_resp_header",
+        "functionArgs": [{
+            "ArgValue": "Access-Control-Allow-Methods",
+            "ArgName": "key"
+        },
+            {
+                "ArgValue": "GET,HEAD,OPTIONS",
+                "ArgName": "value"
+            }
+        ]
+    },
+    {
+        "FunctionName": "set_resp_header",
+        "functionArgs": [{
+            "ArgValue": "Access-Control-Allow-Headers",
+            "ArgName": "key"
+        },
+            {
+                "ArgValue": "Content-Length,Range",
+                "ArgName": "value"
+            }
+        ]
+    },
+    {
+        "FunctionName": "set_resp_header",
+        "functionArgs": [{
+            "ArgValue": "Access-Control-Expose-Headers",
+            "ArgName": "key"
+        },
+            {
+                "ArgValue": "Content-Length,Range",
+                "ArgName": "value"
+            }
+        ]
+    },
+    {
+        "FunctionName": "gzip",
+        "functionArgs": [{
+            "ArgValue": "on",
+            "ArgName": "enable"
+        }]
+    },
+    {
+        "FunctionName": "filetype_based_ttl_set",
+        "functionArgs": [{
+            "ArgValue": "31104000",
+            "ArgName": "ttl"
+        },
+            {
+                "ArgValue": "jpg,jpeg,png,gif,js,css",
+                "ArgName": "file_type"
+            },
+            {
+                "ArgValue": "50",
+                "ArgName": "weight"
+            }
+        ]
+    },
+    {
+        "FunctionName": "path_based_ttl_set",
+        "functionArgs": [{
+            "ArgValue": "/",
+            "ArgName": "path"
+        },
+            {
+                "ArgValue": "2592000",
+                "ArgName": "ttl"
+            },
+            {
+                "ArgValue": "40",
+                "ArgName": "weight"
+            }
+        ]
+    },
+    {
+        "FunctionName": "https_option",
+        "FunctionArgs": [
+                {
+                    "ArgValue": "on",
+                    "ArgName": "http2"
+                },
+                {
+                    "ArgValue": "on",
+                    "ArgName": "ocsp_stapling"
+                }
+        ]
+    }
+]

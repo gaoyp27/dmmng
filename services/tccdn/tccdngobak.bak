@@ -1,0 +1,60 @@
+package main
+
+import (
+	domainlistmain "domainmng/domainlistmng"
+	"fmt"
+
+	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+)
+
+// 获取 tc accesskey 和 secret
+const SecretId = "tencentsecretid"
+const SecretKey = "tencentsecretkey"
+
+// 添加 CDN 域名到 tc
+
+func addCdnSet(domainName string) {
+	credential := common.NewCredential(
+		SecretId,
+		SecretKey,
+	)
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.Endpoint = "cdn.tencentcloudapi.com"
+	client, _ := cdn.NewClient(credential, "", cpf)
+
+	request := cdn.NewDuplicateDomainConfigRequest()
+
+	request.Domain = common.StringPtr("yun2." + domainName)
+	request.ReferenceDomain = common.StringPtr("yun.tuiaaaa.cn")
+
+	// response, err := client.DuplicateDomainConfig(request)
+	_, err := client.DuplicateDomainConfig(request)
+	// 检查 tc 上是否已存在此域名的 CDN
+	if _, ok := err.(*errors.TencentCloudSDKError); ok {
+		fmt.Printf("调用 API 添加 CDN 失败: %s\n", err)
+		return
+	}
+	if err != nil {
+		panic(err)
+	}
+	//fmt.Printf("%s", response.ToJsonString())
+	fmt.Printf("添加%s域名 CDN 成功！", domainName)
+
+}
+
+// aliyun 上添加解析
+
+func main() {
+
+	domainlist, err := domainlistmain.GetDomainList()
+	if err != nil {
+		fmt.Println("获取文件列表出错！")
+		return
+	}
+	for i := 0; i < len(domainlist); i++ {
+		addCdnSet(domainlist[i])
+	}
+}

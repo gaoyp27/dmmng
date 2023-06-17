@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SSL证书采购下载</title>
+</head>
+<body>
+<h1>SSL Purchase and Download</h1>
+<form method="post" action="/buy-ssl">
+    <label >域名列表:</label><br>
+    <input type="text" name="domains"><br>
+    <input type="submit" value="购买证书">
+</form>
+</body>
+<head>
+    <title>下载证书</title>
+</head>
+<body>
+<form action="/download-ssl" method="POST">
+    <label >域名：</label>
+    <input type="text"  name="domains"><br><br>
+
+    <input type="submit" value="下载证书">
+</form>
+</body>
+</html>
